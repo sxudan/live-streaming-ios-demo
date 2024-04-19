@@ -1,0 +1,38 @@
+# Xcode
+.DS_Store
+*/.DS_Store
+*.xcuserstate
+*.xccheckout
+*.xcworkspace
+xcuserdata/
+
+# Swift build artifacts
+build/
+DerivedData/
+*.swiftpm/
+
+# CocoaPods
+Pods/
+Podfile.lock
+*/Pods/
+!Pods/Pods.xcodeproj/
+
+# Carthage
+Carthage/Build/
+
+# Swift Package Manager
+Package.pins
+Package.resolved
+.build/
+
+# App-specific
+*.ipa
+*.xcarchive
+
+# Compiled source
+*.mo
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+*.xcuserdatad
