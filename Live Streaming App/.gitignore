@@ -36,3 +36,5 @@ Package.resolved
 *.perspectivev3
 *.pbxuser
 *.xcuserdatad
+
+GoogleService-Info.plist
