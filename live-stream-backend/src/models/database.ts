@@ -26,5 +26,22 @@ export const database = {
             }
             return (await firestore().collection('users').doc(uid).get()).data()
         }
+    },
+    media: {
+        create: async (uid: string): Promise<string> => {
+            let user = await database.users.get(uid)
+  
+            const result = await firestore().collection('medias').add({
+                createdBy: uid,
+                createdAt: firestore.Timestamp.now().seconds,
+                publishing_status: 'CREATED'
+            })
+            return result.id
+        },
+        update: async (streamId: string, status: 'PUBLISHING' | 'STOPPED') => {
+            await firestore().collection('medias').doc(streamId).update({
+                publishing_status: status
+            })
+        }
     }
 }
