@@ -19,6 +19,7 @@ pod 'FirebaseFirestore'
 pod 'GoogleSignIn'
 pod 'Alamofire'
 pod 'HaishinKit'
+pod 'MobileVLCKit'
 
   target 'Live Streaming AppTests' do
     inherit! :search_paths

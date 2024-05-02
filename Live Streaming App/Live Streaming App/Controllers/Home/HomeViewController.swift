@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import AVFoundation
+import AVKit
 
 class HomeViewController: UIViewController {
     
@@ -17,6 +19,11 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         initialiseData()
     }
     
@@ -56,6 +63,25 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        if let v = Storyboards.instantiateViewController(from: "Main", withIdentifier: "VideoViewController") as? VideoViewController {
+//            v.url = self.medias[indexPath.item].url
+//            self.navigationController?.present(v, animated: true)
+//        }
+        
+   
+            
+            let videoURL = URL(string: self.medias[indexPath.item].url)!
+            
+            let player = AVPlayer(url: videoURL)
+            let playerController = AVPlayerViewController()
+            playerController.player = player
+            
+            present(playerController, animated: true) {
+                player.play()
+            }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -133,6 +133,35 @@ class AppModel {
         Networking.PUT(path: "/profile", body: data, completion: response)
     }
     
+    func createMediaPost(completion: @escaping (Media) -> Void) {
+        let response: (Result<CreateMediaResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let media):
+                completion(media.data)
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.POST(path: "/medias", body: CreateMediaInput(uid: currentUser!.uid), completion: response)
+    }
+    
+    func updateMediaPost(mediaId: String, type: MediaUpdateType, completion: @escaping (Media) -> Void) {
+        let response: (Result<CreateMediaResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let media):
+                completion(media.data)
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        print("Updating media \(mediaId)")
+        Networking.PUT(path: "/medias", body: UpdateMediaInput(uid: currentUser!.uid, streamId: mediaId, status: type), completion: response)
+    }
+    
     func logout() {
         self.authState = .NotLoggedIn
     }

@@ -15,7 +15,7 @@ class LiveViewController: UIViewController {
     
     @IBOutlet weak var actionBtn: UIControl!
     @IBOutlet weak var hkView: MTHKView!
-    let streamname = "stream1"
+    var streamname = ""
     
     let connection = RTMPConnection()
     var stream: RTMPStream!
@@ -23,8 +23,12 @@ class LiveViewController: UIViewController {
         didSet {
             if isPublishing {
                 actionBtn.layer.cornerRadius = 8
+                AppModel.shared.updateMediaPost(mediaId: streamname, type: .Publishing, completion: {_ in})
             } else {
                 actionBtn.layer.cornerRadius = 30
+                if streamname != "" {
+                    AppModel.shared.updateMediaPost(mediaId: streamname, type: .Stopped, completion: {_ in})
+                }
             }
         }
     }
@@ -64,16 +68,21 @@ class LiveViewController: UIViewController {
     
     @IBAction func onActionPublish(_ sender: Any) {
         togglePublish(publish: !isPublishing)
+        
     }
     
     func togglePublish(publish: Bool) {
         if publish {
-           
-            print("Publishing...")
-            connection.addEventListener(.rtmpStatus, selector: #selector(rtmpStatusHandler), observer: self)
-            connection.addEventListener(.ioError, selector: #selector(rtmpErrorHandler), observer: self)
-            connection.connect("rtmp://192.168.1.100:1935")
-          
+            AppModel.shared.createMediaPost(completion: {[self] media in
+                print(media)
+                streamname = media.streamId
+                print("Publishing...")
+                connection.addEventListener(.rtmpStatus, selector: #selector(rtmpStatusHandler), observer: self)
+                connection.addEventListener(.ioError, selector: #selector(rtmpErrorHandler), observer: self)
+                connection.connect("rtmp://192.168.1.100:1935")
+                
+            })
+            
         } else {
             print("Closing...")
             connection.removeEventListener(.rtmpStatus, selector: #selector(rtmpStatusHandler), observer: self)
