@@ -374,7 +374,7 @@ pathDefaults:
   # Default path settings -> Record and playback
 
   # Record streams to disk.
-  record: yes
+  record: no
   # Enable serving recordings with the playback server.
   playback: yes
   # Path of recording segments.

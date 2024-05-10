@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createMedia, getMedias, updateMediaStatus } from "../controllers/mediaController";
+import { addComment, createMedia, fetchComments, getMedias, updateMediaStatus } from "../controllers/mediaController";
 import { glob } from "glob";
 import fs from 'fs'
 
@@ -38,7 +38,7 @@ mediaRoutes.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params
         const range = req.headers.range ?? "0"
-        const videoPath = `./mediamtx/${id}/*`; 
+        const videoPath = `./mediamtx/recordings/${id}/*`; 
         const list = await glob(videoPath)
         console.log(list)
         const videoSize = fs.statSync(list[0]).size
@@ -61,3 +61,24 @@ mediaRoutes.get('/:id', async (req, res, next) => {
         next(e)
     }
 })
+
+mediaRoutes.post('/:streamId/comment', async (req, res, next) => {
+    try {
+        const {streamId} = req.params
+        const { comment, uid } = req.body
+        await addComment(uid, comment, streamId)
+        res.status(200).json({'success': true })
+    } catch(e) {
+        next(e)
+    }
+});
+
+mediaRoutes.get('/:streamId/comment', async (req, res, next) => {
+    try {
+        const {streamId} = req.params
+        const comments = await fetchComments(streamId)
+        res.status(200).json({'success': true , data: comments})
+    } catch(e) {
+        next(e)
+    }
+});

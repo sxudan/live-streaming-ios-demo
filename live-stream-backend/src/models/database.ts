@@ -1,6 +1,6 @@
 import { firestore } from "firebase-admin"
-import { EditProfileInput } from "./profile"
-import { Media } from "./media"
+import { Connection, EditProfileInput } from "./profile"
+import { Comment, Media } from "./media"
 import {User} from '../models/user'
 
 export const database = {
@@ -16,8 +16,17 @@ export const database = {
                 phone
             })
         },
-        get: async (uid: string) => {
-            return (await firestore().collection('users').doc(uid).get()).data()
+        get: async (uid: string, skipConnection: boolean = false) => {
+            const user = (await firestore().collection('users').doc(uid).get()).data() as User
+            if(!skipConnection) {
+                user.followers = await database.connection.followers(uid)
+                user.following = await database.connection.following(uid)
+            }
+            return user
+            // return {
+            //     ...user,
+            //     followers: await database.connection.followers(uid)
+            // }
         },
         update: async (uid: string, editData: EditProfileInput) => {
             const filtered = Object.fromEntries(
@@ -27,7 +36,24 @@ export const database = {
                 await firestore().collection('users').doc(uid).update(filtered)
             }
             return (await firestore().collection('users').doc(uid).get()).data()
-        }
+        },
+        getAll: async () => {
+            const query = await firestore().collection('users').get()
+            const users: User[] = []
+            query.forEach((doc) => {
+                const data = doc.data()
+                users.push({
+                    uid: doc.id,
+                    firstname: data['firstname'],
+                    lastname: data['lastname'],
+                    dob: data['dob'],
+                    username: data['username'],
+                    phone: data['phone'],
+                    email: data['email']
+                })
+            })
+            return users
+        },
     },
     media: {
         create: async (uid: string): Promise<string> => {
@@ -83,6 +109,104 @@ export const database = {
                 // })
             // }))
             return medias
+        }
+    },
+    comments: {
+        add: async (mediaId: string, uid: string, comment: string) => {
+            const createdAt = firestore.Timestamp.now().seconds
+            await firestore().collection('medias').doc(mediaId).collection('comments').add({
+                createdAt: createdAt,
+                postedBy: uid,
+                comment: comment
+            })
+        },
+        getAll: async (mediaId: string) => {
+            const query = await firestore().collection('medias').doc(mediaId).collection('comments').orderBy('createdAt', 'desc').get()
+            let raw:any[] = []
+            query.forEach(q => {
+                const data = q.data()
+                raw.push({
+                    id: q.id,
+                    comment: data['comment'],
+                    postedBy: data['postedBy'],
+                    createdAt: data['createdAt']
+                })
+            })
+            const comments = await Promise.all(raw.map(async (r) => {
+                const postedBy = await database.users.get(r.postedBy, true)
+                return {
+                    id: r.id,
+                    postedBy: postedBy,
+                    createdAt: r.createdAt,
+                    comment: r.comment
+                } as Comment
+            }))
+            return comments
+        }
+    },
+    connection: {
+        add: async (by: string, to: string) => {
+            const createdAt = firestore.Timestamp.now().seconds
+            const result = await firestore().collection('connections').add({
+                createdAt: createdAt,
+                followedBy: by,
+                followedTo: to,
+            })
+            
+            return {
+                id: result.id,
+                followedBy: by,
+                followedTo: to,
+                createdAt: createdAt
+            } 
+        },
+        remove: async (by: string, to: string) => {
+            const query = await firestore().collection('connections').where('followedBy', '==', by).where('followedTo', '==', to).get()
+            if (query.docs.length > 0) {
+                await firestore().collection('connections').doc(query.docs[0].id).delete()
+            }
+        },
+        followers: async (uid: string) => {
+            const query = await firestore().collection('connections').where('followedTo', '==', uid).get()
+            let results: Connection[] = []
+            query.forEach((r) => {
+                const data = r.data()
+                results.push({
+                    id: r.id,
+                    followedBy: data['followedBy'],
+                    followedTo: data['followedTo'],
+                    createdAt: data['createdAt']
+                })
+            })
+            // const r = await Promise.all(results.map(async connection => {
+            //     let u = await database.users.get(connection.followedBy)
+            //     u.followers = undefined
+            //     return u
+            // }))
+            return results
+        },
+        following: async (uid: string) => {
+            try {
+                const query = await firestore().collection('connections').where('followedBy', '==', uid).get()
+                let results: Connection[] = []
+                query.forEach((r) => {
+                    const data = r.data()
+                    results.push({
+                        id: r.id,
+                        followedBy: data['followedBy'],
+                        followedTo: data['followedTo'],
+                        createdAt: data['createdAt']
+                    })
+                })
+                // const r = await Promise.all(results.map(async connection => {
+                //     let u = await database.users.get(connection.followedBy)
+                //     u.followers = undefined
+                //     return u
+                // }))
+            return results
+            } catch(e) {
+                return []
+            }
         }
     }
 }

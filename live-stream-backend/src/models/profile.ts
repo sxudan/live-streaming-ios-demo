@@ -4,3 +4,10 @@ export interface EditProfileInput {
     dob?: number;
     phone?: number;
 }
+
+export interface Connection {
+    id: string;
+    followedBy: string;
+    followedTo: string;
+    createdAt: string;
+}

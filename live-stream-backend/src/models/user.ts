@@ -1,3 +1,5 @@
+import { Connection } from "./profile";
+
 export interface User {
     uid: String;
     firstname: string;
@@ -6,4 +8,6 @@ export interface User {
     username: string;
     email: string;
     phone?: string;
+    followers?: Connection[];
+    following?: Connection[];
 }

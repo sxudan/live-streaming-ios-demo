@@ -10,7 +10,8 @@ const createMedia = async (uid: string) => {
     streamId,
     url: `/${streamId}`,
     createdAt: firestore.Timestamp.now().seconds,
-    postedBy: user
+    postedBy: user,
+    status: 'PUBLISHING',
   } as Media
 }
 
@@ -26,8 +27,18 @@ const getMedias = async (): Promise<Media[]> => {
   return rawMedias
 };
 
+const addComment = async (uid: string, comment: string, streamId: string) => {
+  await database.comments.add(streamId, uid, comment)
+}
+
+const fetchComments = async (streamId: string) => {
+  return await database.comments.getAll(streamId)
+}
+
 export {
     getMedias,
     createMedia,
-    updateMediaStatus
+    updateMediaStatus,
+    addComment,
+    fetchComments
 }

@@ -8,3 +8,10 @@ export interface Media {
     metadata?: any,
     status: 'PUBLISHING' | 'STOPPED'
 }
+
+export interface Comment {
+    id: string
+    postedBy: User
+    comment: string
+    createdAt: number
+}
