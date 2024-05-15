@@ -9,6 +9,8 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    @IBOutlet weak var followingLbl: UILabel!
+    @IBOutlet weak var followerLbl: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var usernameLabel: UILabel!
     let sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -18,6 +20,17 @@ class ProfileViewController: UIViewController {
         initialise()
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let user = AppModel.shared.currentUser {
+            AppModel.shared.getProfile(id: user.uid, completion: {u in
+                self.followerLbl.text = "\(u.followers?.count ?? 0)"
+                self.followingLbl.text = "\(u.following?.count ?? 0)"
+            })
+        }
     }
     
     func initialise() {
@@ -65,8 +78,8 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCollectionViewCell", for: indexPath) as? HomeCollectionViewCell {
-            cell.imageView.image = UIImage(named: "Profile")
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCollectionViewCell", for: indexPath) as? ProfileCollectionViewCell {
+            cell.imgView.image = UIImage(named: "Profile")
             return cell
         } else {
             return UICollectionViewCell()

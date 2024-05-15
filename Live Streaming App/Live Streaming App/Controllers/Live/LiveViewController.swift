@@ -13,9 +13,14 @@ import Logboard
 class LiveViewController: UIViewController {
 
     
+    @IBOutlet weak var commentTblView: UITableView!
     @IBOutlet weak var actionBtn: UIControl!
     @IBOutlet weak var hkView: MTHKView!
     var streamname = ""
+    
+    var timer: Timer?
+    
+    var comments: [Comment] = []
     
     let connection = RTMPConnection()
     var stream: RTMPStream!
@@ -38,6 +43,41 @@ class LiveViewController: UIViewController {
         activateSession()
         setupHaishinKit()
         isPublishing = false
+        startTimer()
+        setupTable()
+    }
+    
+    func setupTable() {
+        commentTblView.delegate = self
+        commentTblView.dataSource = self
+        commentTblView.backgroundColor = .black.withAlphaComponent(0.5)
+//        commentTblView.backgroundView = nil
+        commentTblView.transform = CGAffineTransformMakeScale (1,-1);
+    }
+    
+    func startTimer() {
+        // Invalidate previous timer to prevent multiple timers running simultaneously
+        timer?.invalidate()
+        
+        // Schedule a new timer to fire every 1 second
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            // Call your fetch function here
+            self?.fetchComments()
+        }
+    }
+    
+    func stopTimer() {
+        // Stop the timer when needed
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    func fetchComments() {
+        AppModel.shared.getComments(streamId: streamname, completion: {comments in
+            print(comments)
+            self.comments = comments
+            self.commentTblView.reloadData()
+        })
     }
     
     
@@ -82,14 +122,14 @@ class LiveViewController: UIViewController {
                 connection.connect("rtmp://192.168.1.100:1935")
                 
             })
-            
+            startTimer()
         } else {
             print("Closing...")
             connection.removeEventListener(.rtmpStatus, selector: #selector(rtmpStatusHandler), observer: self)
             connection.removeEventListener(.ioError, selector: #selector(rtmpErrorHandler), observer: self)
             stream.close()
             connection.close()
-           
+           stopTimer()
         }
     }
     
@@ -132,6 +172,24 @@ class LiveViewController: UIViewController {
     }
     */
 
+}
+
+extension LiveViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return comments.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath) as? CommentCell {
+            let comment = self.comments[indexPath.row]
+            cell.lbl1.text = "\(comment.postedBy.firstname) \(comment.postedBy.lastname)"
+            cell.lbl2.text = comment.comment
+            cell.contentView.transform = CGAffineTransformMakeScale (1,-1);
+            return cell
+        } else {
+            return UITableViewCell()
+        }
+    }
 }
 
 extension LiveViewController: IOStreamDelegate {

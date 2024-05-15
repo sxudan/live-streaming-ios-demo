@@ -19,3 +19,18 @@ struct UpdateProfileResponse: Codable {
     let success: Bool
     let data: User
 }
+
+struct SearchProfileResponse: Codable {
+    let success: Bool
+    let data: [User]
+}
+
+struct ProfileResponse: Codable {
+    let success: Bool
+    let data: User
+}
+
+
+struct NormalResponse: Codable {
+    let success: Bool
+}

@@ -22,8 +22,11 @@ const updateMediaStatus = async (streamId: string, status: string) => {
   await database.media.update(streamId, status)
 }
 
-const getMedias = async (): Promise<Media[]> => {
+const getMedias = async (self: string): Promise<Media[]> => {
   const rawMedias =  await database.media.getAll()
+  // const user = await database.users.get(self, false)
+  // const filtered = user.following?.map(f => rawMedias.filter(x => x.postedBy.uid == f.followedTo) )
+  // console.log('filtered => ',filtered)
   return rawMedias
 };
 

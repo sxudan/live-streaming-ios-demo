@@ -7,11 +7,9 @@
 
 import UIKit
 
-class HomeCollectionViewCell: UITableViewCell {
+class ProfileCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var subtitleLbl: UILabel!
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var titleLbl: UILabel!
     
     
 }

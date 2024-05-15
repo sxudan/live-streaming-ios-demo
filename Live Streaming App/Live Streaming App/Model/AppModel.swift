@@ -115,7 +115,8 @@ class AppModel {
                 break
             }
         }
-        Networking.GET(path: "/medias", completion: response)
+        let uid = currentUser?.uid ?? ""
+        Networking.GET(path: "/medias?uid=\(uid)", completion: response)
     }
     
     func updateProfile(data: UpdateProfileInput, completion: @escaping (User) -> Void) {
@@ -160,6 +161,90 @@ class AppModel {
         }
         print("Updating media \(mediaId)")
         Networking.PUT(path: "/medias", body: UpdateMediaInput(uid: currentUser!.uid, streamId: mediaId, status: type), completion: response)
+    }
+    
+    func searchProfile(query: String, completion: @escaping ([User]) -> Void) {
+        let response: (Result<SearchProfileResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let data):
+                completion(data.data)
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.GET(path: "/profile?search=\(query)", completion: response)
+    }
+    
+    func getProfile(id: String, completion: @escaping (User) -> Void) {
+        let response: (Result<ProfileResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let data):
+                completion(data.data)
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.GET(path: "/profile/\(id)", completion: response)
+    }
+    
+    func followProfile(uid: String,to: String, completion: @escaping () -> Void) {
+        let response: (Result<NormalResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let data):
+                completion()
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.POST(path: "/profile/\(uid)/follow/\(to)", body: nil, completion: response)
+    }
+    
+    func unfollowProfile(uid: String,to: String, completion: @escaping () -> Void) {
+        let response: (Result<NormalResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let data):
+                completion()
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.POST(path: "/profile/\(uid)/unfollow/\(to)",body: nil, completion: response)
+    }
+    
+    func getComments(streamId: String, completion: @escaping ([Comment]) -> Void) {
+        let response: (Result<CommentFetchResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let data):
+                completion(data.data)
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.GET(path: "/medias/\(streamId)/comment", completion: response)
+    }
+    
+    func postComment(streamId: String,body: CommentInput, completion: @escaping () -> Void) {
+        let response: (Result<NormalResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let data):
+                completion()
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.POST(path: "/medias/\(streamId)/comment",body: body, completion: response)
     }
     
     func logout() {

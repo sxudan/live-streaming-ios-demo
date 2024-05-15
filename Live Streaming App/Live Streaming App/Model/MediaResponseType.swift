@@ -22,6 +22,7 @@ struct Media: Codable {
     let url: String
     let createdAt: Int
     let postedBy: User
+    let status: MediaUpdateType
 }
 
 struct CreateMediaInput: Codable {
@@ -37,4 +38,21 @@ struct UpdateMediaInput: Codable {
 struct CreateMediaResponse: Codable {
     let success: Bool
     let data: Media
+}
+
+struct Comment: Codable {
+    let id: String
+    let postedBy: User
+    let comment: String
+    let createdAt: Int
+}
+
+struct CommentFetchResponse: Codable {
+    let success: Bool
+    let data: [Comment]
+}
+
+struct CommentInput: Codable {
+    let uid: String
+    let comment: String
 }

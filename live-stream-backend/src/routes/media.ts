@@ -7,7 +7,8 @@ export const mediaRoutes = Router();
 
 mediaRoutes.get('/', async (req, res, next) => {
     try {
-        const medias = await getMedias()
+        const {uid} = req.query
+        const medias = await getMedias(uid as string)
         res.status(200).json({'success': true, data: medias })
     } catch(e) {
         next(e)
