@@ -12,7 +12,18 @@ const createMedia = async (uid: string) => {
     createdAt: firestore.Timestamp.now().seconds,
     postedBy: user,
     status: 'PUBLISHING',
+    viewCount: 0,
   } as Media
+}
+
+const increaseViewCount = async (streamId: string) => {
+  const count = await database.media.increaseViewCount(streamId)
+  return count
+}
+
+const decreaseViewCount = async (streamId: string) => {
+  const count = await database.media.decreaseViewCount(streamId)
+  return count
 }
 
 const updateMediaStatus = async (streamId: string, status: string) => {
@@ -27,7 +38,7 @@ const getMedias = async (self: string): Promise<Media[]> => {
   // const user = await database.users.get(self, false)
   // const filtered = user.following?.map(f => rawMedias.filter(x => x.postedBy.uid == f.followedTo) )
   // console.log('filtered => ',filtered)
-  return rawMedias
+  return rawMedias.filter(f => f.status != 'STOPPED')
 };
 
 const addComment = async (uid: string, comment: string, streamId: string) => {
@@ -43,5 +54,7 @@ export {
     createMedia,
     updateMediaStatus,
     addComment,
-    fetchComments
+    fetchComments,
+    increaseViewCount,
+    decreaseViewCount
 }

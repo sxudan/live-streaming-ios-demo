@@ -7,6 +7,7 @@ export interface Media {
     createdAt: number
     metadata?: any,
     status: 'PUBLISHING' | 'STOPPED'
+    viewCount?: number
 }
 
 export interface Comment {

@@ -66,6 +66,40 @@ export const database = {
             })
             return result.id
         },
+        increaseViewCount: async(streamId: string) => {
+            console.log('incer')
+            const query = await firestore().collection('medias').doc(streamId).get()
+            const data = query.data()
+            if(data) {
+                console.log('increasing.....')
+                let viewCount = data['viewCount'] ?? 0
+                viewCount += 1
+                await database.media.updateViewCount(streamId, viewCount)
+                return viewCount
+            } else {
+                console.log('null')
+            }
+            return 0
+        },
+        decreaseViewCount: async(streamId: string) => {
+            const query = await firestore().collection('medias').doc(streamId).get()
+            const data = query.data()
+            if(data) {
+                let viewCount = data['viewCount'] ?? 0
+                viewCount -= 1
+                if(viewCount < 0) {
+                    viewCount = 0
+                }
+                await database.media.updateViewCount(streamId, viewCount)
+                return viewCount
+            }
+            return 0
+        },
+        updateViewCount: async(streamId: string, count: number) => {
+            await firestore().collection('medias').doc(streamId).update({
+                viewCount: count
+            })
+        },
         update: async (streamId: string, status: 'PUBLISHING' | 'STOPPED') => {
             await firestore().collection('medias').doc(streamId).update({
                 publishing_status: status
@@ -75,14 +109,15 @@ export const database = {
             const query = await firestore().collection('medias').get()
             let medias: Media[] = []
            
-            let datas: {'id': string, 'createdBy': string, 'createdAt': number, 'status': string}[] = []
+            let datas: {'id': string, 'createdBy': string, 'createdAt': number, 'status': string, 'viewCount': number}[] = []
             query.forEach(doc => {
                 if (doc.data()['publishing_status'] != 'CREATED') {
                     datas.push({
                         id: doc.id,
                         createdBy: doc.data()['createdBy'],
                         createdAt: doc.data()['createdAt'],
-                        status: doc.data()['publishing_status']
+                        status: doc.data()['publishing_status'],
+                        viewCount: doc.data()['viewCount'] ?? 0,
                     })
                 }
             })
@@ -94,7 +129,8 @@ export const database = {
                     createdAt: d['createdAt'],
                     url: `http://192.168.1.100:3000/medias/${d.id}`,
                     postedBy: user as User,
-                    status: d.status as 'PUBLISHING' | 'STOPPED'
+                    status: d.status as 'PUBLISHING' | 'STOPPED',
+                    viewCount: d.viewCount
                 })
             }))
             // await Promise.all(query.forEach(async doc => {
@@ -141,7 +177,13 @@ export const database = {
                     comment: r.comment
                 } as Comment
             }))
-            return comments
+            const q = await firestore().collection('medias').doc(mediaId).get()
+            const data = q.data()
+            let viewCount = 0
+            if(data) {
+                viewCount = data['viewCount'] ?? 0
+            }
+            return {comments, viewCount}
         }
     },
     connection: {

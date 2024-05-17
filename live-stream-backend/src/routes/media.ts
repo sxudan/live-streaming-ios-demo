@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addComment, createMedia, fetchComments, getMedias, updateMediaStatus } from "../controllers/mediaController";
+import { addComment, createMedia, decreaseViewCount, fetchComments, getMedias, increaseViewCount, updateMediaStatus } from "../controllers/mediaController";
 import { glob } from "glob";
 import fs from 'fs'
 
@@ -77,8 +77,29 @@ mediaRoutes.post('/:streamId/comment', async (req, res, next) => {
 mediaRoutes.get('/:streamId/comment', async (req, res, next) => {
     try {
         const {streamId} = req.params
-        const comments = await fetchComments(streamId)
-        res.status(200).json({'success': true , data: comments})
+        const {comments, viewCount} = await fetchComments(streamId)
+        res.status(200).json({'success': true , data: comments, viewCount: viewCount})
+    } catch(e) {
+        next(e)
+    }
+});
+
+mediaRoutes.post('/viewcount/increase', async (req, res, next) => {
+    try {
+        const {streamId} = req.body
+        const count = await increaseViewCount(streamId)
+        res.status(200).json({'success': true, data: {count}})
+    } catch(e) {
+        console.log(e)
+        next(e)
+    }
+});
+
+mediaRoutes.post('/viewcount/decrease', async (req, res, next) => {
+    try {
+        const {streamId} = req.body
+        const count = await decreaseViewCount(streamId)
+        res.status(200).json({'success': true, data: {count} })
     } catch(e) {
         next(e)
     }

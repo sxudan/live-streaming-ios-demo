@@ -18,6 +18,7 @@ class VideoViewController: UIViewController {
     @IBOutlet weak var movieView: UIView!
     var timer: Timer?
     
+    @IBOutlet weak var countLbl: UILabel!
     @IBOutlet weak var textField: UITextField!
     var comments: [Comment] = []
 //    var mediaPlayer = VLCMediaPlayer()
@@ -27,14 +28,25 @@ class VideoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        
         wkView.configuration.allowsInlineMediaPlayback = true
         if let u = url {
             loadHLSStream(url: u)
         }
         if let id = id {
+            AppModel.shared.increaseViewCount(streamId: id, completion: {
+                
+            })
             setupTable()
             startTimer()
+        }
+    }
+    
+    deinit {
+        if let id = id {
+            AppModel.shared.decreaseViewCount(streamId: id, completion: {
+                
+            })
         }
     }
     
@@ -88,9 +100,10 @@ class VideoViewController: UIViewController {
     }
     
     func fetchComments() {
-        AppModel.shared.getComments(streamId: id!, completion: {comments in
+        AppModel.shared.getComments(streamId: id!, completion: {comments, viewCount in
             print(comments)
             self.comments = comments
+            self.countLbl.text = "\(viewCount)"
             self.commentTblView.reloadData()
         })
     }

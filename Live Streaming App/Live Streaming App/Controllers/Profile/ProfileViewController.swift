@@ -9,6 +9,7 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    @IBOutlet weak var profileImgView: UIImageView!
     @IBOutlet weak var followingLbl: UILabel!
     @IBOutlet weak var followerLbl: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -32,10 +33,30 @@ class ProfileViewController: UIViewController {
             })
         }
     }
+    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+    }
+    
+    func downloadImage(from url: URL) {
+        print("Download Started")
+        getData(from: url) { data, response, error in
+            guard let data = data, error == nil else { return }
+            print(response?.suggestedFilename ?? url.lastPathComponent)
+            print("Download Finished")
+            // always update the UI from the main thread
+            DispatchQueue.main.async() { [weak self] in
+                self?.profileImgView.image = UIImage(data: data)
+            }
+        }
+    }
+
     
     func initialise() {
         if let user = AppModel.shared.currentUser {
             usernameLabel.text = user.username
+            if let img = user.profileImg, let url = URL(string: img) {
+                downloadImage(from: url)
+            }
         } else {
             AppModel.shared.logout()
         }

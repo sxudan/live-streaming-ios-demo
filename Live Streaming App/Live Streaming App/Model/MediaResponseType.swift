@@ -23,10 +23,15 @@ struct Media: Codable {
     let createdAt: Int
     let postedBy: User
     let status: MediaUpdateType
+    let viewCount: Int
 }
 
 struct CreateMediaInput: Codable {
     let uid: String
+}
+
+struct StreamInput: Codable {
+    let streamId: String
 }
 
 struct UpdateMediaInput: Codable {
@@ -50,9 +55,11 @@ struct Comment: Codable {
 struct CommentFetchResponse: Codable {
     let success: Bool
     let data: [Comment]
+    let viewCount: Int
 }
 
 struct CommentInput: Codable {
     let uid: String
     let comment: String
 }
+

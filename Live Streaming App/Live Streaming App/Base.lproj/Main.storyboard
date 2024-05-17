@@ -220,6 +220,7 @@
                         <outlet property="collectionView" destination="jnt-jc-Ien" id="TBN-Ph-pIt"/>
                         <outlet property="followerLbl" destination="8Jh-sv-y6T" id="k4m-dV-zri"/>
                         <outlet property="followingLbl" destination="tj7-Ci-ggb" id="OoI-ee-3fm"/>
+                        <outlet property="profileImgView" destination="NTQ-Gm-c14" id="EhG-xq-mF9"/>
                         <outlet property="usernameLabel" destination="RlB-hm-41J" id="dKm-yn-4xj"/>
                     </connections>
                 </viewController>
@@ -316,6 +317,20 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gtw-We-vtc">
+                                <rect key="frame" x="16.000000000000004" y="75" width="45.333333333333343" height="20.333333333333329"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="eQl-eY-VZI">
+                                        <rect key="frame" x="0.0" y="2.3333333333333321" width="26.333333333333332" height="16.333333333333336"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AOq-zK-TdQ">
+                                        <rect key="frame" x="34.333333333333336" y="0.0" width="11" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="5RW-3d-M3i">
                                 <rect key="frame" x="0.0" y="477" width="300" height="200"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -392,10 +407,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="LLS-Gp-B6J" firstAttribute="bottom" secondItem="0JR-dg-iQJ" secondAttribute="bottom" id="8SA-N3-UOW"/>
+                            <constraint firstItem="gtw-We-vtc" firstAttribute="top" secondItem="0JR-dg-iQJ" secondAttribute="top" constant="16" id="FhL-pd-GBe"/>
                             <constraint firstItem="0JR-dg-iQJ" firstAttribute="bottom" secondItem="EsU-o0-1GE" secondAttribute="bottom" constant="16" id="Ju3-Z9-WxW"/>
                             <constraint firstItem="EsU-o0-1GE" firstAttribute="centerX" secondItem="aTz-KI-t9z" secondAttribute="centerX" id="KLS-vL-MBc"/>
                             <constraint firstItem="EsU-o0-1GE" firstAttribute="top" secondItem="5RW-3d-M3i" secondAttribute="bottom" constant="16" id="Mgv-Ef-RnB"/>
                             <constraint firstItem="LLS-Gp-B6J" firstAttribute="leading" secondItem="0JR-dg-iQJ" secondAttribute="leading" id="eDW-D1-iA7"/>
+                            <constraint firstItem="gtw-We-vtc" firstAttribute="leading" secondItem="0JR-dg-iQJ" secondAttribute="leading" constant="16" id="hxI-Xv-Ska"/>
                             <constraint firstItem="LLS-Gp-B6J" firstAttribute="top" secondItem="aTz-KI-t9z" secondAttribute="top" id="t8v-Ok-Nk5"/>
                             <constraint firstItem="5RW-3d-M3i" firstAttribute="leading" secondItem="0JR-dg-iQJ" secondAttribute="leading" id="tbJ-pO-Nhj"/>
                             <constraint firstItem="LLS-Gp-B6J" firstAttribute="trailing" secondItem="0JR-dg-iQJ" secondAttribute="trailing" id="vTb-wg-f3p"/>
@@ -407,6 +424,7 @@
                         <outlet property="actionBtn" destination="EsU-o0-1GE" id="wCQ-4D-2gI"/>
                         <outlet property="commentTblView" destination="5RW-3d-M3i" id="YIm-Ox-nKR"/>
                         <outlet property="hkView" destination="LLS-Gp-B6J" id="Krv-MH-dug"/>
+                        <outlet property="liveCountLbl" destination="AOq-zK-TdQ" id="7xl-nQ-wVB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ma1-Ed-s8B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -538,6 +556,20 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NKY-GP-2wT">
+                                <rect key="frame" x="16.000000000000004" y="75" width="45.333333333333343" height="20.333333333333329"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="QkB-tN-ZUD">
+                                        <rect key="frame" x="0.0" y="2.3333333333333321" width="26.333333333333332" height="16.333333333333336"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zwT-QK-A3I">
+                                        <rect key="frame" x="34.333333333333336" y="0.0" width="11" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="HjT-Xn-lvz">
                                 <rect key="frame" x="16" y="552" width="300" height="200"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -620,10 +652,12 @@
                             <constraint firstItem="xtX-CG-sMR" firstAttribute="top" secondItem="Sfw-jZ-Fwd" secondAttribute="top" id="0Hn-XF-sSk"/>
                             <constraint firstItem="Sfw-jZ-Fwd" firstAttribute="trailing" secondItem="YE3-Hs-oTa" secondAttribute="trailing" constant="16" id="6Bj-2G-Wwp"/>
                             <constraint firstItem="AyP-L5-EBO" firstAttribute="leading" secondItem="Sfw-jZ-Fwd" secondAttribute="leading" id="C4t-Gs-JGQ"/>
+                            <constraint firstItem="NKY-GP-2wT" firstAttribute="top" secondItem="Sfw-jZ-Fwd" secondAttribute="top" constant="16" id="Dpb-lg-icx"/>
                             <constraint firstItem="AyP-L5-EBO" firstAttribute="top" secondItem="Sfw-jZ-Fwd" secondAttribute="top" id="Dtc-kf-C1v"/>
                             <constraint firstItem="Sfw-jZ-Fwd" firstAttribute="trailing" secondItem="AyP-L5-EBO" secondAttribute="trailing" id="GIZ-zf-NOC"/>
                             <constraint firstItem="HjT-Xn-lvz" firstAttribute="leading" secondItem="Sfw-jZ-Fwd" secondAttribute="leading" constant="16" id="Gp8-hb-Yrs"/>
                             <constraint firstItem="YE3-Hs-oTa" firstAttribute="leading" secondItem="IdM-JG-qZE" secondAttribute="trailing" constant="16" id="J8C-1z-6tN"/>
+                            <constraint firstItem="NKY-GP-2wT" firstAttribute="leading" secondItem="Sfw-jZ-Fwd" secondAttribute="leading" constant="16" id="NhW-BK-s7E"/>
                             <constraint firstItem="Sfw-jZ-Fwd" firstAttribute="trailing" secondItem="xtX-CG-sMR" secondAttribute="trailing" id="UDe-J7-Hay"/>
                             <constraint firstItem="IdM-JG-qZE" firstAttribute="top" secondItem="HjT-Xn-lvz" secondAttribute="bottom" constant="16" id="bvQ-w8-RSx"/>
                             <constraint firstItem="xtX-CG-sMR" firstAttribute="leading" secondItem="Sfw-jZ-Fwd" secondAttribute="leading" id="ds8-H4-xK9"/>
@@ -635,6 +669,7 @@
                     </view>
                     <connections>
                         <outlet property="commentTblView" destination="HjT-Xn-lvz" id="4jG-eF-FcV"/>
+                        <outlet property="countLbl" destination="zwT-QK-A3I" id="3Hn-Gn-liM"/>
                         <outlet property="movieView" destination="xtX-CG-sMR" id="wcB-Wl-ad9"/>
                         <outlet property="textField" destination="IdM-JG-qZE" id="A7K-Tv-DjO"/>
                         <outlet property="wkView" destination="AyP-L5-EBO" id="AEd-Er-UTc"/>
@@ -1087,6 +1122,7 @@
                         <outlet property="followingLbl" destination="gB5-pm-GKc" id="jye-ud-UdK"/>
                         <outlet property="indicator" destination="t1F-QX-tH9" id="X6P-hb-TzW"/>
                         <outlet property="nameLbl" destination="O1a-CO-nxd" id="YE1-hd-P5r"/>
+                        <outlet property="profileImgView" destination="1jj-jH-aIC" id="dAn-Dc-dwt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ijh-v4-hCv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1200,6 +1236,7 @@
     </scenes>
     <resources>
         <image name="Profile" width="266.66665649414062" height="266.66665649414062"/>
+        <image name="eye" catalog="system" width="128" height="79"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="paperplane.circle.fill" catalog="system" width="128" height="123"/>
@@ -1212,25 +1249,25 @@
         <image name="play.rectangle.fill" catalog="system" width="128" height="93"/>
         <image name="rectangle.portrait.and.arrow.right" catalog="system" width="128" height="108"/>
         <systemColor name="linkColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray5Color">
-            <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

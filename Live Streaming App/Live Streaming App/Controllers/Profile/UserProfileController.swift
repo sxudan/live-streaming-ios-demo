@@ -11,6 +11,7 @@ class UserProfileController: UIViewController {
     
     var id: String?
 
+    @IBOutlet weak var profileImgView: UIImageView!
     @IBOutlet weak var indicator: UIActivityIndicatorView!
     @IBOutlet weak var followingLbl: UILabel!
     @IBOutlet weak var followerLbl: UILabel!
@@ -28,6 +29,23 @@ class UserProfileController: UIViewController {
         }
     }
     
+    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+    }
+    
+    func downloadImage(from url: URL) {
+        print("Download Started")
+        getData(from: url) { data, response, error in
+            guard let data = data, error == nil else { return }
+            print(response?.suggestedFilename ?? url.lastPathComponent)
+            print("Download Finished")
+            // always update the UI from the main thread
+            DispatchQueue.main.async() { [weak self] in
+                self?.profileImgView.image = UIImage(data: data)
+            }
+        }
+    }
+    
     func loadUser(id: String) {
         self.indicator.isHidden = false
         AppModel.shared.getProfile(id: id, completion: {user in
@@ -37,6 +55,9 @@ class UserProfileController: UIViewController {
             self.following = user.following ?? []
             self.followerLbl.text = "\(user.followers?.count ?? 0)"
             self.followingLbl.text = "\(user.following?.count ?? 0)"
+            if let img = user.profileImg, let url = URL(string: img) {
+                self.downloadImage(from: url)
+            }
             if let me = AppModel.shared.currentUser?.uid {
                 let isFollowed = self.followers.first(where: {c in
                     return c.followedBy == me

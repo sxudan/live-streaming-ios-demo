@@ -18,6 +18,7 @@ class LiveViewController: UIViewController {
     @IBOutlet weak var hkView: MTHKView!
     var streamname = ""
     
+    @IBOutlet weak var liveCountLbl: UILabel!
     var timer: Timer?
     
     var comments: [Comment] = []
@@ -73,9 +74,10 @@ class LiveViewController: UIViewController {
     }
     
     func fetchComments() {
-        AppModel.shared.getComments(streamId: streamname, completion: {comments in
+        AppModel.shared.getComments(streamId: streamname, completion: {comments, viewCount in
             print(comments)
             self.comments = comments
+            self.liveCountLbl.text = "\(viewCount)"
             self.commentTblView.reloadData()
         })
     }

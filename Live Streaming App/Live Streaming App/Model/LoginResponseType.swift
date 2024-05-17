@@ -24,6 +24,7 @@ struct User: Codable {
     let phone: String?
     let followers: [Connection]?
     let following: [Connection]?
+    let profileImg: String?
 }
 
 struct LoginResponseType: Decodable {

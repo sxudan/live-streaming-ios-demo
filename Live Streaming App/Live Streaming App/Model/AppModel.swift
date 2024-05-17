@@ -219,11 +219,11 @@ class AppModel {
         Networking.POST(path: "/profile/\(uid)/unfollow/\(to)",body: nil, completion: response)
     }
     
-    func getComments(streamId: String, completion: @escaping ([Comment]) -> Void) {
+    func getComments(streamId: String, completion: @escaping ([Comment], _ count: Int) -> Void) {
         let response: (Result<CommentFetchResponse, ErrorResponseType>) -> Void = { res in
             switch res {
             case .success(let data):
-                completion(data.data)
+                completion(data.data, data.viewCount)
                 break
             case .failure(let error):
                 self.errorMessage = error.message
@@ -245,6 +245,34 @@ class AppModel {
             }
         }
         Networking.POST(path: "/medias/\(streamId)/comment",body: body, completion: response)
+    }
+    
+    func increaseViewCount(streamId: String, completion: @escaping () -> Void) {
+        let response: (Result<NormalResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let media):
+                completion()
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.POST(path: "/medias/viewcount/increase", body: StreamInput(streamId: streamId), completion: response)
+    }
+    
+    func decreaseViewCount(streamId: String, completion: @escaping () -> Void) {
+        let response: (Result<NormalResponse, ErrorResponseType>) -> Void = { res in
+            switch res {
+            case .success(let media):
+                completion()
+                break
+            case .failure(let error):
+                self.errorMessage = error.message
+                break
+            }
+        }
+        Networking.POST(path: "/medias/viewcount/decrease", body: StreamInput(streamId: streamId), completion: response)
     }
     
     func logout() {
