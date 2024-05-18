@@ -22,7 +22,7 @@
     "express": "^4.19.2",
     "firebase-admin": "^12.1.0",
     "glob": "^10.3.12",
-    "google-auth-library": "^9.8.0",
+    "google-auth-library": "^9.9.0",
     "jsonwebtoken": "^9.0.2",
     "ts-node": "^10.9.2"
   }
